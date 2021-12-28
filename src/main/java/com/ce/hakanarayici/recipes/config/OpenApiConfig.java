@@ -11,7 +11,7 @@ public class OpenApiConfig {
     public GroupedOpenApi receipeApiGroup(){
         return GroupedOpenApi.builder()
                 .group("Receipes")
-                .pathsToMatch("/api/**")
+                .pathsToMatch("/**")
                 .packagesToScan("com.ce.hakanarayici.recipes")
                 .build();
     }

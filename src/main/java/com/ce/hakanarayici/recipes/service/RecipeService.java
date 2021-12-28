@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialClob;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,15 +25,19 @@ public class RecipeService implements IRecipeService {
 
         RecipeEntity recipeEntity = recipeDAO.findByRecipeName(recipeName);
 
-        return RecipeDTO.builder()
-                .recipeID(recipeEntity.getId())
-                .createDate(recipeEntity.getCreateDate())
-                .recipeName(recipeEntity.getRecipeName())
-                .ingredientList(recipeEntity.getIngredientList().stream().map(a -> a.getIngredientName()).collect(Collectors.toList()))
-                .instructions(SQLUtil.clobToString(recipeEntity.getInstructions()))
-                .vegetarian(recipeEntity.getVegetarian())
-                .suitablePeopleCount(recipeEntity.getSuitablePeopleCount())
-                .build();
+        if(recipeEntity != null){
+            return RecipeDTO.builder()
+                    .recipeID(recipeEntity.getId())
+                    .createDate(recipeEntity.getCreateDate())
+                    .recipeName(recipeEntity.getRecipeName())
+                    .ingredientList(recipeEntity.getIngredientList().stream().map(a -> a.getIngredientName()).collect(Collectors.toList()))
+                    .instructions(SQLUtil.clobToString(recipeEntity.getInstructions()))
+                    .vegetarian(recipeEntity.getVegetarian())
+                    .suitablePeopleCount(recipeEntity.getSuitablePeopleCount())
+                    .build();
+        }
+
+        return null;
     }
 
     @SneakyThrows
@@ -69,19 +74,24 @@ public class RecipeService implements IRecipeService {
         if(optionalRecipeEntity.isPresent()){
 
             RecipeEntity recipeEntity = optionalRecipeEntity.get();
+
+            List<IngredientEntity> ingredientEntities = recipeEntity.getIngredientList().stream().collect(Collectors.toList());
+            ingredientEntities.stream().forEach(recipeEntity::removeChild);
+
             recipeEntity.setCreateDate(recipeDTO.getCreateDate());
             recipeEntity.setRecipeName(recipeDTO.getRecipeName());
             recipeEntity.setInstructions(new SerialClob(recipeDTO.getInstructions().toCharArray()));
             recipeEntity.setSuitablePeopleCount(recipeDTO.getSuitablePeopleCount());
             recipeEntity.setVegetarian(recipeDTO.getVegetarian());
 
-            recipeEntity.setIngredientList(recipeDTO.getIngredientList()
+            recipeDTO.getIngredientList()
                     .stream()
                     .map(a -> IngredientEntity.builder()
                             .ingredientName(a)
                             .recipe(recipeEntity)
                             .build())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList())
+            .stream().forEach(recipeEntity::addChild);
 
             recipeDAO.save(recipeEntity);
 
@@ -103,9 +113,25 @@ public class RecipeService implements IRecipeService {
             recipeDAO.delete(optionalRecipeEntity.get());
             return Boolean.TRUE;
         }else{
-            throw new IllegalArgumentException("couldnt find recipe to update");
+            throw new IllegalArgumentException("couldnt find recipe to delete");
         }
 
+    }
+
+    @Override
+    public List<RecipeDTO> getAllRecipes() {
+        List<RecipeEntity> recipeEntityList = recipeDAO.findAll();
+
+        return recipeEntityList.stream().map(recipeEntity -> RecipeDTO.builder()
+                .recipeID(recipeEntity.getId())
+                .createDate(recipeEntity.getCreateDate())
+                .recipeName(recipeEntity.getRecipeName())
+                .ingredientList(recipeEntity.getIngredientList().stream().map(a -> a.getIngredientName()).collect(Collectors.toList()))
+                .instructions(SQLUtil.clobToString(recipeEntity.getInstructions()))
+                .vegetarian(recipeEntity.getVegetarian())
+                .suitablePeopleCount(recipeEntity.getSuitablePeopleCount())
+                .build())
+                .collect(Collectors.toList());
     }
 
 }

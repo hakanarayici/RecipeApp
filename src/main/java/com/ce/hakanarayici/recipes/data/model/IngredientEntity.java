@@ -21,7 +21,7 @@ public class IngredientEntity {
     @Column(name = "NAME")
     private String ingredientName;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="recipe_id", nullable=false)
     private RecipeEntity recipe;
 

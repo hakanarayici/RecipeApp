@@ -31,9 +31,17 @@ public class RecipeEntity {
     @Column(name = "SUITABLE_PEOPLE_COUNT")
     private Integer suitablePeopleCount;
 
-    @OneToMany(mappedBy="recipe",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="recipe",cascade=CascadeType.ALL,orphanRemoval = true)
     private List<IngredientEntity> ingredientList;
 
     private Clob instructions;
+
+    public void removeChild(IngredientEntity aSon) {
+        this.ingredientList.remove(aSon);
+    }
+
+    public void addChild(IngredientEntity aSon) {
+        this.ingredientList.add(aSon);
+    }
 
 }

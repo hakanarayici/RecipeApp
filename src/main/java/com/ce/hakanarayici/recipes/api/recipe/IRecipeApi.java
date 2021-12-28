@@ -5,27 +5,35 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin
 @RequestMapping("/api/recipe")
 public interface IRecipeApi {
 
     @Operation(summary = "gets recipe by given name", description = "gets recipe")
     @ApiResponse(description = "gets recipe by given name")
     @GetMapping("/get")
-    Recipe getReceipe(@RequestParam String recipeName);
+    ResponseEntity<Recipe> getReceipe(@RequestParam String recipeName);
 
     @Operation(summary = "creates recipe", description = "creates recipe")
     @ApiResponse(description = "creates recipe")
     @PostMapping("/create")
-    ResponseEntity<String> createReceipe(@RequestBody Recipe receipe);
+    ResponseEntity<RecipeApiResponse> createReceipe(@RequestBody Recipe receipe);
 
     @Operation(summary = "updates recipe", description = "updates recipe")
     @ApiResponse(description = "updates recipe")
     @PutMapping("/update")
-    ResponseEntity<String> updateReceipe(@RequestBody Recipe recipe);
+    ResponseEntity<RecipeApiResponse> updateReceipe(@RequestBody Recipe recipe);
 
     @Operation(summary = "deletes recipe", description = "deletes recipe")
     @ApiResponse(description = "deletes recipe")
     @DeleteMapping("/delete")
-    ResponseEntity<String> deleteReceipe(@RequestParam Long recipeID);
+    ResponseEntity<RecipeApiResponse> deleteReceipe(@RequestParam Long recipeID);
+
+    @Operation(summary = "gets all recipes", description = "gets all recipes")
+    @ApiResponse(description = "gets all recipes")
+    @GetMapping("/getAll")
+    ResponseEntity<List<Recipe>> getAll();
 
 }
