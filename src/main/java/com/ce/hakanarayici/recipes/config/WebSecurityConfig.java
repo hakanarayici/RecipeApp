@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
@@ -21,59 +22,59 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	private final UserDetailsService jwtUserDetailsService;
+    private final UserDetailsService jwtUserDetailsService;
 
-	private final JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// configure AuthenticationManager so that it knows from where to load
-		// user for matching credentials
-		// Use BCryptPasswordEncoder
-		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-	}
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        // configure AuthenticationManager so that it knows from where to load
+        // user for matching credentials
+        // Use BCryptPasswordEncoder
+        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+    }
 
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		/*
-
-		// We don't need CSRF for this example
-		httpSecurity.csrf().disable();
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
 
 
-		httpSecurity.authorizeRequests()
-				.antMatchers("/api**","/api/**","api/**")
-				.authenticated()
-				.anyRequest()
-				.permitAll();
+        // We don't need CSRF for this example
+        httpSecurity.cors().and().csrf().disable();
+        //httpSecurity.csrf().disable();
 
-				httpSecurity.csrf().disable();
-				httpSecurity.headers().frameOptions().disable();
 
-				// Add a filter to validate the tokens with every request
-				httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+        httpSecurity.authorizeRequests()
+                .antMatchers("/api**", "/api/**", "api/**")
+                .authenticated()
+                .anyRequest()
+                .permitAll();
+
+
+        httpSecurity.headers().frameOptions().disable();
+
+        // Add a filter to validate the tokens with every request
+        httpSecurity.
+                addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests();
-*/
-		httpSecurity.authorizeRequests()
+
+
+		/*httpSecurity.authorizeRequests()
 				.anyRequest()
 				.permitAll();
+*/
 
 
-		httpSecurity.csrf().disable();
-
-		httpSecurity.headers().frameOptions().disable();
-
-	}
+    }
 }
