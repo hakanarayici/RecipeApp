@@ -12,3 +12,7 @@ spring:
     console:
       enabled: true
       path: /h2
+jwt:
+  secret: hakanarayici
+server:
+  port: 8081

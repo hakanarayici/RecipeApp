@@ -35,10 +35,10 @@ public class RecipeServiceTest {
     @Test
     public void getRecipeByName() {
 
-        when(recipeDAO.findByRecipeName(anyString())).thenReturn(RecipeEntity.builder()
+        when(recipeDAO.findByRecipeName(anyString())).thenReturn( Optional.of(RecipeEntity.builder()
                 .recipeName("some food")
                 .ingredientList(List.of(IngredientEntity.builder().ingredientName("some ingredient").build()))
-                .build());
+                .build()));
 
         RecipeDTO recipeDTO = recipeService.getRecipeByName("some food");
 

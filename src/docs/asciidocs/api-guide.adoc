@@ -1,0 +1,17 @@
+== Recipes API
+Hakan Arayici;
+
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+=== getRecipeByName API
+
+==== gets recipe according to given recipe name
+
+===== Sample Request
+
+include::{snippets}\should-return-recipe\http-request.adoc[]

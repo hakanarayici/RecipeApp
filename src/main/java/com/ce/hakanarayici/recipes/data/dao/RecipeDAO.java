@@ -3,7 +3,8 @@ package com.ce.hakanarayici.recipes.data.dao;
 import com.ce.hakanarayici.recipes.data.model.RecipeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RecipeDAO extends JpaRepository<RecipeEntity, Long> {
+import java.util.Optional;
 
-    RecipeEntity findByRecipeName(String name);
+public interface RecipeDAO extends JpaRepository<RecipeEntity, Long> {
+    Optional<RecipeEntity> findByRecipeName(String name);
 }

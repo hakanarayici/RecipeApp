@@ -3,6 +3,8 @@ package com.ce.hakanarayici.recipes.service;
 import com.ce.hakanarayici.recipes.data.dao.RecipeDAO;
 import com.ce.hakanarayici.recipes.data.model.IngredientEntity;
 import com.ce.hakanarayici.recipes.data.model.RecipeEntity;
+import com.ce.hakanarayici.recipes.exception.RecipeAlreadyExistException;
+import com.ce.hakanarayici.recipes.exception.RecipeNotFoundException;
 import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
 import com.ce.hakanarayici.recipes.util.SQLUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,26 +25,30 @@ public class RecipeService implements IRecipeService {
     @Override
     public RecipeDTO getRecipeByName(String recipeName) {
 
-        RecipeEntity recipeEntity = recipeDAO.findByRecipeName(recipeName);
+        RecipeEntity recipeEntity = recipeDAO.findByRecipeName(recipeName)
+                .orElseThrow(() -> new RecipeNotFoundException(recipeName));
 
-        if(recipeEntity != null){
-            return RecipeDTO.builder()
-                    .recipeID(recipeEntity.getId())
-                    .createDate(recipeEntity.getCreateDate())
-                    .recipeName(recipeEntity.getRecipeName())
-                    .ingredientList(recipeEntity.getIngredientList().stream().map(a -> a.getIngredientName()).collect(Collectors.toList()))
-                    .instructions(SQLUtil.clobToString(recipeEntity.getInstructions()))
-                    .vegetarian(recipeEntity.getVegetarian())
-                    .suitablePeopleCount(recipeEntity.getSuitablePeopleCount())
-                    .build();
-        }
+        return RecipeDTO.builder()
+                .recipeID(recipeEntity.getId())
+                .createDate(recipeEntity.getCreateDate())
+                .recipeName(recipeEntity.getRecipeName())
+                .ingredientList(recipeEntity.getIngredientList().stream().map(a -> a.getIngredientName()).collect(Collectors.toList()))
+                .instructions(SQLUtil.clobToString(recipeEntity.getInstructions()))
+                .vegetarian(recipeEntity.getVegetarian())
+                .suitablePeopleCount(recipeEntity.getSuitablePeopleCount())
+                .build();
 
-        return null;
     }
 
     @SneakyThrows
     @Override
     public Boolean createRecipe(RecipeDTO receipeDTO) {
+
+
+        recipeDAO.findByRecipeName(receipeDTO.getRecipeName())
+                .ifPresent(s -> {
+                    throw new RecipeAlreadyExistException(receipeDTO.getRecipeName());
+                });
 
         RecipeEntity entity = RecipeEntity.builder()
                 .createDate(receipeDTO.getCreateDate())
@@ -69,37 +75,30 @@ public class RecipeService implements IRecipeService {
     @Override
     public Boolean updateRecipe(RecipeDTO recipeDTO) {
 
-        Optional<RecipeEntity> optionalRecipeEntity = recipeDAO.findById(recipeDTO.getRecipeID());
+        RecipeEntity recipeEntity  = recipeDAO.findById(recipeDTO.getRecipeID())
+                .orElseThrow(() -> new RecipeNotFoundException(recipeDTO.getRecipeID()));
 
-        if(optionalRecipeEntity.isPresent()){
+        List<IngredientEntity> ingredientEntities = recipeEntity.getIngredientList().stream().collect(Collectors.toList());
+        ingredientEntities.stream().forEach(recipeEntity::removeChild);
 
-            RecipeEntity recipeEntity = optionalRecipeEntity.get();
+        recipeEntity.setCreateDate(recipeDTO.getCreateDate());
+        recipeEntity.setRecipeName(recipeDTO.getRecipeName());
+        recipeEntity.setInstructions(new SerialClob(recipeDTO.getInstructions().toCharArray()));
+        recipeEntity.setSuitablePeopleCount(recipeDTO.getSuitablePeopleCount());
+        recipeEntity.setVegetarian(recipeDTO.getVegetarian());
 
-            List<IngredientEntity> ingredientEntities = recipeEntity.getIngredientList().stream().collect(Collectors.toList());
-            ingredientEntities.stream().forEach(recipeEntity::removeChild);
+        recipeDTO.getIngredientList()
+                .stream()
+                .map(a -> IngredientEntity.builder()
+                        .ingredientName(a)
+                        .recipe(recipeEntity)
+                        .build())
+                .collect(Collectors.toList())
+                .stream().forEach(recipeEntity::addChild);
 
-            recipeEntity.setCreateDate(recipeDTO.getCreateDate());
-            recipeEntity.setRecipeName(recipeDTO.getRecipeName());
-            recipeEntity.setInstructions(new SerialClob(recipeDTO.getInstructions().toCharArray()));
-            recipeEntity.setSuitablePeopleCount(recipeDTO.getSuitablePeopleCount());
-            recipeEntity.setVegetarian(recipeDTO.getVegetarian());
+        recipeDAO.save(recipeEntity);
 
-            recipeDTO.getIngredientList()
-                    .stream()
-                    .map(a -> IngredientEntity.builder()
-                            .ingredientName(a)
-                            .recipe(recipeEntity)
-                            .build())
-                    .collect(Collectors.toList())
-            .stream().forEach(recipeEntity::addChild);
-
-            recipeDAO.save(recipeEntity);
-
-            return Boolean.TRUE;
-
-        }else{
-            throw new IllegalArgumentException("couldnt find recipe to update");
-        }
+        return Boolean.TRUE;
 
     }
 
@@ -107,14 +106,12 @@ public class RecipeService implements IRecipeService {
     @Override
     public Boolean deleteRecipe(Long recipeID) {
 
-        Optional<RecipeEntity> optionalRecipeEntity = recipeDAO.findById(recipeID);
+        RecipeEntity recipeEntity = recipeDAO.findById(recipeID)
+                .orElseThrow(() -> new RecipeNotFoundException(recipeID));
 
-        if(optionalRecipeEntity.isPresent()){
-            recipeDAO.delete(optionalRecipeEntity.get());
-            return Boolean.TRUE;
-        }else{
-            throw new IllegalArgumentException("couldnt find recipe to delete");
-        }
+        recipeDAO.delete(recipeEntity);
+
+        return Boolean.TRUE;
 
     }
 
