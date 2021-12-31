@@ -1,6 +1,4 @@
-== Recipes API
-Hakan Arayici;
-
+= Greeting REST Service API Guide
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -8,10 +6,224 @@ Hakan Arayici;
 :toclevels: 4
 :sectlinks:
 
-=== getRecipeByName API
+= Resources
 
-==== gets recipe according to given recipe name
+== getAll Recipes REST Service
 
-===== Sample Request
+getAll restservice
 
-include::{snippets}\should-return-recipe\http-request.adoc[]
+=== Accessing all of the recipes GET with provided content
+
+==== Request structure
+
+include::{snippets}\should_return_all_recipes_if_exists\http-request.adoc[]
+
+==== Request parameters
+include::{snippets}\should_return_all_recipes_if_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\should_return_all_recipes_if_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\should_return_all_recipes_if_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\should_return_all_recipes_if_exists\curl-request.adoc[]
+
+=== Accessing the greeting GET with default content
+
+==== Request structure
+
+include::{snippets}\should_return_all_recipes_if_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\should_return_all_recipes_if_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\should_return_all_recipes_if_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\should_return_all_recipes_if_exists\curl-request.adoc[]
+
+
+== get Recipe REST Service
+
+get restservice
+
+=== Accessing recipe bu recipe name GET with provided content
+
+==== Request structure
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\http-request.adoc[]
+
+==== Request parameters
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\request-parameters.adoc[]
+
+
+==== Response fields
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\curl-request.adoc[]
+
+=== Accessing the greeting GET with default content
+
+==== Request structure
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_name_should-return-recipe_when_recipe_exists\curl-request.adoc[]
+
+
+== create Recipe REST Service
+
+create restservice
+
+=== Creating recipe by given params POST with provided content
+
+==== Request structure
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\http-request.adoc[]
+
+==== Request parameters
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\request-fields.adoc[]
+
+
+==== Response fields
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\curl-request.adoc[]
+
+=== Accessing the greeting GET with default content
+
+==== Request structure
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_should_-create_-recipe_when_recipe_is_not_already_exists\curl-request.adoc[]
+
+== update Recipe REST Service
+
+update restservice
+
+=== updates recipe by given params PUT with provided content
+
+==== Request structure
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\http-request.adoc[]
+
+==== Request parameters
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\request-fields.adoc[]
+
+
+==== Response fields
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_existsgiven_recipe_should_-update_-recipe_if_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\curl-request.adoc[]
+
+=== Accessing the greeting GET with default content
+
+==== Request structure
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_recipe_should_-update_-recipe_if_exists\curl-request.adoc[]
+
+== delete Recipe REST Service
+
+Delete restservice
+
+=== Deletes recipe by id if exists DELETE with provided content
+
+==== Request structure
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\http-request.adoc[]
+
+==== Request parameters
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\curl-request.adoc[]
+
+=== Accessing the greeting GET with default content
+
+==== Request structure
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}\given_-recipe_id_should_-delete_if_-recipe_exists\curl-request.adoc[]

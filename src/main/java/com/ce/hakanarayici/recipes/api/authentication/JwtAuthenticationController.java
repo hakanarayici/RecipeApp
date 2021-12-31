@@ -1,4 +1,4 @@
-package com.ce.hakanarayici.recipes.api.recipe;
+package com.ce.hakanarayici.recipes.api.authentication;
 
 import com.ce.hakanarayici.recipes.config.JWTTokenUtil;
 import com.ce.hakanarayici.recipes.config.JwtRequest;

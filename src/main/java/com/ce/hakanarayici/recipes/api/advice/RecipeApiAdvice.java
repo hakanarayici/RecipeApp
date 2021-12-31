@@ -15,7 +15,6 @@ import java.util.Map;
 @ControllerAdvice
 public class RecipeApiAdvice extends ResponseEntityExceptionHandler {
 
-
     @ExceptionHandler(RecipeNotFoundException.class)
     public ResponseEntity<Object> handleRecipeNotFoundException(
             RecipeNotFoundException ex, WebRequest request) {

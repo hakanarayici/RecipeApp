@@ -4,12 +4,16 @@ import com.ce.hakanarayici.recipes.data.dao.RecipeDAO;
 import com.ce.hakanarayici.recipes.data.model.IngredientEntity;
 import com.ce.hakanarayici.recipes.data.model.RecipeEntity;
 import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,20 +21,20 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+
 public class RecipeServiceTest {
 
-    @Mock
+    @MockBean
     RecipeDAO recipeDAO;
 
-    private IRecipeService recipeService;
+    @InjectMocks
+    private RecipeService recipeService;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         recipeDAO = mock(RecipeDAO.class);
         recipeService = new RecipeService(recipeDAO);
     }
-
 
     @Test
     public void getRecipeByName() {
@@ -68,7 +72,9 @@ public class RecipeServiceTest {
     public void updateRecipe() {
 
         when(recipeDAO.save(any(RecipeEntity.class))).thenReturn(null);
-        when(recipeDAO.findById(anyLong())).thenReturn(Optional.of(RecipeEntity.builder().build()));
+        when(recipeDAO.findById(anyLong())).thenReturn(Optional.of(RecipeEntity.builder()
+                .ingredientList(new ArrayList<>())
+                .build()));
 
         Boolean success = recipeService.updateRecipe(RecipeDTO.builder()
                 .recipeID(1L)
