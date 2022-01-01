@@ -24,7 +24,7 @@ public class RecipeApi implements IRecipeApi {
     private final IRecipeService recipeService;
 
     @Override
-    public ResponseEntity<Recipe> getReceipe(@RequestParam(required = true) String recipeName){
+    public ResponseEntity<Recipe> getRecipe(@RequestParam(required = true) String recipeName){
 
         RecipeDTO recipeDTO = recipeService.getRecipeByName(recipeName);
 
@@ -45,15 +45,15 @@ public class RecipeApi implements IRecipeApi {
 
 
     @Override
-    public ResponseEntity<RecipeApiResponse> createReceipe(@Valid @RequestBody Recipe receipe){
+    public ResponseEntity<RecipeApiResponse> createRecipe(@Valid @RequestBody Recipe recipe){
 
         RecipeDTO receipeDTO = RecipeDTO.builder()
-                .recipeName(receipe.getRecipeName())
-                .suitablePeopleCount(receipe.getSuitablePeopleCount())
-                .vegetarian(receipe.getVegetarian())
-                .instructions(receipe.getInstructions())
-                .ingredientList(receipe.getIngredientList())
-                .createDate(Optional.ofNullable(receipe.getCreateDate()).orElse(LocalDateTime.now()))
+                .recipeName(recipe.getRecipeName())
+                .suitablePeopleCount(recipe.getSuitablePeopleCount())
+                .vegetarian(recipe.getVegetarian())
+                .instructions(recipe.getInstructions())
+                .ingredientList(recipe.getIngredientList())
+                .createDate(Optional.ofNullable(recipe.getCreateDate()).orElse(LocalDateTime.now()))
                 .build();
 
         recipeService.createRecipe(receipeDTO);
@@ -61,7 +61,7 @@ public class RecipeApi implements IRecipeApi {
     }
 
     @Override
-    public ResponseEntity<RecipeApiResponse> updateReceipe(@Valid @RequestBody Recipe recipe){
+    public ResponseEntity<RecipeApiResponse> updateRecipe(@Valid @RequestBody Recipe recipe){
 
         recipeService.updateRecipe(RecipeDTO.builder()
                 .createDate(recipe.getCreateDate())
@@ -77,7 +77,7 @@ public class RecipeApi implements IRecipeApi {
     }
 
     @Override
-    public ResponseEntity<RecipeApiResponse> deleteReceipe(@RequestParam(required = true) Long recipeID){
+    public ResponseEntity<RecipeApiResponse> deleteRecipe(@RequestParam(required = true) Long recipeID){
         recipeService.deleteRecipe(recipeID);
         return new ResponseEntity<>(new RecipeApiResponse(true,""),HttpStatus.OK);
     }

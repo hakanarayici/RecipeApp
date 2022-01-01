@@ -4,6 +4,7 @@ import com.ce.hakanarayici.recipes.service.security.JwtUserDetailService;
 import com.ce.hakanarayici.recipes.util.JWTTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -33,19 +35,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		String username = null;
 		String jwtToken = null;
+
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get
-		// only the Token
  		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
+				log.error("Unable to get JWT Token");
 			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
+				log.error("JWT Token has expired");
 			}
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+			log.warn("JWT Token does not begin with Bearer String");
 		}
 
 		// Once we get the token validate it.
@@ -55,7 +57,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 			// if token is valid configure Spring Security to manually set
 			// authentication
-			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+			if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(jwtToken, userDetails))) {
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());

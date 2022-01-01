@@ -6,6 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+//docker build -t recipeapp .
+//docker run -p 8081:8081 -d recipeapp
+//docker run -p 8080:8080 -d vs
+
 
 @CrossOrigin
 @RequestMapping("/api/recipe")
@@ -14,22 +18,22 @@ public interface IRecipeApi {
     @Operation(summary = "gets recipe by given name", description = "gets recipe")
     @ApiResponse(description = "gets recipe by given name")
     @GetMapping("/get")
-    ResponseEntity<Recipe> getReceipe(@RequestParam String recipeName);
+    ResponseEntity<Recipe> getRecipe(@RequestParam String recipeName);
 
     @Operation(summary = "creates recipe", description = "creates recipe")
     @ApiResponse(description = "creates recipe")
     @PostMapping("/create")
-    ResponseEntity<RecipeApiResponse> createReceipe(@RequestBody Recipe receipe);
+    ResponseEntity<RecipeApiResponse> createRecipe(@RequestBody Recipe recipe);
 
     @Operation(summary = "updates recipe", description = "updates recipe")
     @ApiResponse(description = "updates recipe")
     @PutMapping("/update")
-    ResponseEntity<RecipeApiResponse> updateReceipe(@RequestBody Recipe recipe);
+    ResponseEntity<RecipeApiResponse> updateRecipe(@RequestBody Recipe recipe);
 
     @Operation(summary = "deletes recipe", description = "deletes recipe")
     @ApiResponse(description = "deletes recipe")
     @DeleteMapping("/delete")
-    ResponseEntity<RecipeApiResponse> deleteReceipe(@RequestParam Long recipeID);
+    ResponseEntity<RecipeApiResponse> deleteRecipe(@RequestParam Long recipeID);
 
     @Operation(summary = "gets all recipes", description = "gets all recipes")
     @ApiResponse(description = "gets all recipes")

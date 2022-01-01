@@ -1,13 +1,13 @@
 package com.ce.hakanarayici.recipes.service.security;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailService implements UserDetailsService {
@@ -20,7 +20,7 @@ public class JwtUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals(username)) {
+        if (this.userName.equals(username)) {
             return new User(username, passWord,
                     new ArrayList<>());
         } else {

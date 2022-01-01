@@ -2,7 +2,6 @@ package com.ce.hakanarayici.recipes.api.recipe;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serializable;
 
