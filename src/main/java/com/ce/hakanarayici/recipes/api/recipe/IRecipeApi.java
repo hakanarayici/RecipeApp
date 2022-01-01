@@ -6,10 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//docker build -t recipeapp .
-//docker run -p 8081:8081 -d recipeapp
-//docker run -p 8080:8080 -d vs
-
 
 @CrossOrigin
 @RequestMapping("/api/recipe")
