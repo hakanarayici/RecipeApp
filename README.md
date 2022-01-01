@@ -9,7 +9,7 @@ Build the project using mvn clean install
 Run using mvn spring-boot:run
 ```
 
-## To Create Container
+## To Create and Run Docker Container
 ```
 docker build -t recipeapp .
 docker run -p 8081:8081 -d recipeapp
