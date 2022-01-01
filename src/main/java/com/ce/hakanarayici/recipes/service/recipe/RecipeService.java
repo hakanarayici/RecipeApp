@@ -1,17 +1,18 @@
-package com.ce.hakanarayici.recipes.service;
+package com.ce.hakanarayici.recipes.service.recipe;
 
 import com.ce.hakanarayici.recipes.data.dao.RecipeDAO;
 import com.ce.hakanarayici.recipes.data.model.IngredientEntity;
 import com.ce.hakanarayici.recipes.data.model.RecipeEntity;
 import com.ce.hakanarayici.recipes.exception.RecipeAlreadyExistException;
 import com.ce.hakanarayici.recipes.exception.RecipeNotFoundException;
-import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.dto.RecipeDTO;
 import com.ce.hakanarayici.recipes.util.SQLUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialClob;
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,8 +76,17 @@ public class RecipeService implements IRecipeService {
     @Override
     public Boolean updateRecipe(RecipeDTO recipeDTO) {
 
+        Optional.ofNullable(recipeDTO.getRecipeID()).orElseThrow(() -> new IllegalArgumentException());
+
         RecipeEntity recipeEntity  = recipeDAO.findById(recipeDTO.getRecipeID())
                 .orElseThrow(() -> new RecipeNotFoundException(recipeDTO.getRecipeID()));
+
+
+        recipeDAO.findByRecipeName(recipeDTO.getRecipeName())
+                .filter(s -> !s.getId().equals(recipeDTO.getRecipeID()))
+                .ifPresent(s -> {
+                    throw new RecipeAlreadyExistException(recipeDTO.getRecipeName());
+                });
 
         List<IngredientEntity> ingredientEntities = recipeEntity.getIngredientList().stream().collect(Collectors.toList());
         ingredientEntities.stream().forEach(recipeEntity::removeChild);

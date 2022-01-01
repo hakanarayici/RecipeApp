@@ -1,7 +1,7 @@
 package com.ce.hakanarayici.recipes.api.recipe;
 
-import com.ce.hakanarayici.recipes.service.IRecipeService;
-import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.IRecipeService;
+import com.ce.hakanarayici.recipes.service.recipe.dto.RecipeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -21,7 +24,7 @@ public class RecipeApi implements IRecipeApi {
     private final IRecipeService recipeService;
 
     @Override
-    public ResponseEntity<Recipe> getReceipe(@RequestParam String recipeName){
+    public ResponseEntity<Recipe> getReceipe(@RequestParam(required = true) String recipeName){
 
         RecipeDTO recipeDTO = recipeService.getRecipeByName(recipeName);
 
@@ -42,7 +45,7 @@ public class RecipeApi implements IRecipeApi {
 
 
     @Override
-    public ResponseEntity<RecipeApiResponse> createReceipe(@RequestBody Recipe receipe){
+    public ResponseEntity<RecipeApiResponse> createReceipe(@Valid @RequestBody Recipe receipe){
 
         RecipeDTO receipeDTO = RecipeDTO.builder()
                 .recipeName(receipe.getRecipeName())
@@ -50,7 +53,7 @@ public class RecipeApi implements IRecipeApi {
                 .vegetarian(receipe.getVegetarian())
                 .instructions(receipe.getInstructions())
                 .ingredientList(receipe.getIngredientList())
-                .createDate(receipe.getCreateDate())
+                .createDate(Optional.ofNullable(receipe.getCreateDate()).orElse(LocalDateTime.now()))
                 .build();
 
         recipeService.createRecipe(receipeDTO);
@@ -58,13 +61,13 @@ public class RecipeApi implements IRecipeApi {
     }
 
     @Override
-    public ResponseEntity<RecipeApiResponse> updateReceipe(@RequestBody Recipe recipe){
+    public ResponseEntity<RecipeApiResponse> updateReceipe(@Valid @RequestBody Recipe recipe){
 
         recipeService.updateRecipe(RecipeDTO.builder()
                 .createDate(recipe.getCreateDate())
                 .ingredientList(recipe.getIngredientList())
                 .instructions(recipe.getInstructions())
-                .recipeID(recipe.getRecipeID())
+                .recipeID(Optional.ofNullable(recipe.getRecipeID()).orElseThrow(() -> new IllegalArgumentException("Recipe id is null")))
                 .recipeName(recipe.getRecipeName())
                 .vegetarian(recipe.getVegetarian())
                 .suitablePeopleCount(recipe.getSuitablePeopleCount())
@@ -74,7 +77,7 @@ public class RecipeApi implements IRecipeApi {
     }
 
     @Override
-    public ResponseEntity<RecipeApiResponse> deleteReceipe(@RequestParam Long recipeID){
+    public ResponseEntity<RecipeApiResponse> deleteReceipe(@RequestParam(required = true) Long recipeID){
         recipeService.deleteRecipe(recipeID);
         return new ResponseEntity<>(new RecipeApiResponse(true,""),HttpStatus.OK);
     }

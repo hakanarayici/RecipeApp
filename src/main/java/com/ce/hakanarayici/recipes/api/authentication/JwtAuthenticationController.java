@@ -1,9 +1,7 @@
 package com.ce.hakanarayici.recipes.api.authentication;
 
-import com.ce.hakanarayici.recipes.config.JWTTokenUtil;
-import com.ce.hakanarayici.recipes.config.JwtRequest;
-import com.ce.hakanarayici.recipes.config.JwtResponse;
-import com.ce.hakanarayici.recipes.config.JwtUserDetailService;
+import com.ce.hakanarayici.recipes.util.JWTTokenUtil;
+import com.ce.hakanarayici.recipes.service.security.JwtUserDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;

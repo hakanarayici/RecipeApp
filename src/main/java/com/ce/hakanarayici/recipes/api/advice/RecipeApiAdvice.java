@@ -1,5 +1,6 @@
 package com.ce.hakanarayici.recipes.api.advice;
 
+import com.ce.hakanarayici.recipes.api.recipe.RecipeApiResponse;
 import com.ce.hakanarayici.recipes.exception.RecipeAlreadyExistException;
 import com.ce.hakanarayici.recipes.exception.RecipeNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,21 +20,14 @@ public class RecipeApiAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleRecipeNotFoundException(
             RecipeNotFoundException ex, WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("message", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new RecipeApiResponse(false,ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 
     @ExceptionHandler(RecipeAlreadyExistException.class)
     public ResponseEntity<Object> handleRecipeAlreadyExistException(
             RecipeAlreadyExistException ex, WebRequest request) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("message", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(new RecipeApiResponse(false,ex.getMessage()), HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

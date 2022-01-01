@@ -1,4 +1,4 @@
-package com.ce.hakanarayici.recipes.config;
+package com.ce.hakanarayici.recipes.api.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

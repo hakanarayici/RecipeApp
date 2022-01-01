@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,13 +24,21 @@ public class Recipe implements Serializable {
 
     private Long recipeID;
 
+    @NotBlank
+    @NotNull
     private String recipeName;
 
+    @NotNull
     private Boolean vegetarian;
 
+    @NotNull
     private Integer suitablePeopleCount;
 
+    @NotEmpty
+    @NotNull
     private List<String> ingredientList;
 
+    @NotBlank
+    @NotNull
     private String instructions;
 }

@@ -1,7 +1,6 @@
-package com.ce.hakanarayici.recipes.service;
+package com.ce.hakanarayici.recipes.service.recipe;
 
-import com.ce.hakanarayici.recipes.api.recipe.Recipe;
-import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.dto.RecipeDTO;
 
 import java.util.List;
 

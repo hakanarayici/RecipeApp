@@ -1,13 +1,13 @@
 package com.ce.hakanarayici.recipes.api.recipe;
 
 import com.ce.hakanarayici.recipes.config.AsciiDocConfiguration;
-import com.ce.hakanarayici.recipes.config.JWTTokenUtil;
+import com.ce.hakanarayici.recipes.util.JWTTokenUtil;
 import com.ce.hakanarayici.recipes.config.JwtAuthenticationEntryPoint;
-import com.ce.hakanarayici.recipes.config.JwtUserDetailService;
+import com.ce.hakanarayici.recipes.service.security.JwtUserDetailService;
 import com.ce.hakanarayici.recipes.exception.RecipeAlreadyExistException;
 import com.ce.hakanarayici.recipes.exception.RecipeNotFoundException;
-import com.ce.hakanarayici.recipes.service.RecipeService;
-import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.RecipeService;
+import com.ce.hakanarayici.recipes.service.recipe.dto.RecipeDTO;
 import com.ce.hakanarayici.recipes.util.LocalDateJSONAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +22,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -323,6 +322,36 @@ public class RecipeApiTest {
         verify(recipeService,times(1)).updateRecipe(any(RecipeDTO.class));
 
     }
+
+
+    @Test
+    public void given_recipe_should_not_Update_Recipe_if_recipe_name_belongs_to_another_recipe() throws Exception {
+
+        Recipe recipe = Recipe.builder()
+                .recipeID(1L)
+                .recipeName("Kofte")
+                .instructions("bla bla bla")
+                .ingredientList(Arrays.asList("Kiyma","sogan","ekmek ici"))
+                .suitablePeopleCount(50)
+                .vegetarian(Boolean.FALSE)
+                .build();
+
+        when(recipeService.updateRecipe(any(RecipeDTO.class))).thenThrow(RecipeAlreadyExistException.class);
+
+        mockMvc.perform(put("/api/recipe/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson(recipe))
+                .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andDo(document("{method-name}"))
+                .andReturn();
+
+        verify(recipeService,times(1)).updateRecipe(any(RecipeDTO.class));
+
+    }
+
+
 
     @Test
     public void given_Recipe_id_should_Delete_if_Recipe_exists() throws Exception {

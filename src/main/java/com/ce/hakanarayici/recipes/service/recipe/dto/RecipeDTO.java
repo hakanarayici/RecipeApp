@@ -1,4 +1,4 @@
-package com.ce.hakanarayici.recipes.service.dto;
+package com.ce.hakanarayici.recipes.service.recipe.dto;
 
 import lombok.Builder;
 import lombok.Getter;

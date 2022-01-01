@@ -1,7 +1,8 @@
-package com.ce.hakanarayici.recipes.config;
+package com.ce.hakanarayici.recipes.service.security;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,10 +12,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUserDetailService implements UserDetailsService {
 
+    @Value("${security.user.name}")
+    private String userName;
+
+    @Value("${security.user.pass}")
+    private String passWord;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if ("hakanarayici".equals(username)) {
-            return new User("hakanarayici", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
+        if (username.equals(username)) {
+            return new User(username, passWord,
                     new ArrayList<>());
         } else {
             throw new UsernameNotFoundException("User not found with username: " + username);

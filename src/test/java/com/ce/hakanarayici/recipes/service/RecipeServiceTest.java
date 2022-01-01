@@ -3,17 +3,14 @@ package com.ce.hakanarayici.recipes.service;
 import com.ce.hakanarayici.recipes.data.dao.RecipeDAO;
 import com.ce.hakanarayici.recipes.data.model.IngredientEntity;
 import com.ce.hakanarayici.recipes.data.model.RecipeEntity;
-import com.ce.hakanarayici.recipes.service.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.dto.RecipeDTO;
+import com.ce.hakanarayici.recipes.service.recipe.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +34,7 @@ public class RecipeServiceTest {
     }
 
     @Test
-    public void getRecipeByName() {
+    public void testGetRecipeByName() {
 
         when(recipeDAO.findByRecipeName(anyString())).thenReturn( Optional.of(RecipeEntity.builder()
                 .recipeName("some food")
@@ -53,7 +50,7 @@ public class RecipeServiceTest {
     }
 
     @Test
-    public void createRecipe() {
+    public void testCreateRecipe() {
 
         when(recipeDAO.save(any(RecipeEntity.class))).thenReturn(null);
 
@@ -69,7 +66,7 @@ public class RecipeServiceTest {
     }
 
     @Test
-    public void updateRecipe() {
+    public void testUpdateRecipe() {
 
         when(recipeDAO.save(any(RecipeEntity.class))).thenReturn(null);
         when(recipeDAO.findById(anyLong())).thenReturn(Optional.of(RecipeEntity.builder()
@@ -89,7 +86,7 @@ public class RecipeServiceTest {
     }
 
     @Test
-    public void deleteRecipe() {
+    public void testDeleteRecipe() {
         when(recipeDAO.findById(anyLong())).thenReturn(Optional.of(RecipeEntity.builder().build()));
         doNothing().when(recipeDAO).delete(any(RecipeEntity.class));
 
@@ -98,5 +95,26 @@ public class RecipeServiceTest {
         assertTrue(success);
         verify(recipeDAO,times(1)).delete(any(RecipeEntity.class));
         verify(recipeDAO,times(1)).findById(anyLong());
+    }
+
+
+    @Test
+    public void testGetAllRecipes() {
+        when(recipeDAO.findAll())
+                .thenReturn(List.of(
+                        RecipeEntity.builder().recipeName("Kofte")
+                                .ingredientList(List.of(IngredientEntity.builder().ingredientName("some ingredient").build()))
+                                .build(),
+                        RecipeEntity.builder().recipeName("Patates")
+                                .ingredientList(List.of(IngredientEntity.builder().ingredientName("some more ingredient").build()))
+                                .build()
+                            )
+                );
+
+        List<RecipeDTO> allRecipes = recipeService.getAllRecipes();
+
+        assertNotNull(allRecipes);
+        assertEquals(2,allRecipes.size());
+        verify(recipeDAO,times(1)).findAll();
     }
 }
